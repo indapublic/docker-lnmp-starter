@@ -1,0 +1,45 @@
+server {
+	server_name website.com;
+	root /var/www/app/public;
+
+	client_max_body_size 128m;
+
+	gzip on;
+	gzip_disable "msie6";
+
+	gzip_comp_level 6;
+	gzip_min_length 1100;
+	gzip_buffers 16 8k;
+	gzip_proxied any;
+	gzip_types
+		text/plain
+		text/css
+		text/js
+		text/xml
+		text/javascript
+		application/javascript
+		application/x-javascript
+		application/json
+		application/xml
+		application/rss+xml
+		image/svg+xml;
+
+	location / {
+		try_files $uri @rewriteapp;
+	}
+
+	location @rewriteapp {
+		rewrite ^(.*)$ /index.php/$1 last;
+	}
+
+	location ~ ^/index\.php(/|$) {
+		fastcgi_pass php-upstream;
+		fastcgi_split_path_info ^(.+\.php)(/.*)$;
+		include fastcgi_params;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		fastcgi_param HTTPS off;
+	}
+
+	error_log /var/log/nginx/app_error.log;
+	access_log /var/log/nginx/app_access.log;
+}

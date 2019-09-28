@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+    db:
+        image: mysql
+        command: ["--default-authentication-plugin=mysql_native_password"]
+        environment:
+            MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+            MYSQL_DATABASE: MYSQL_DATABASE
+            MYSQL_USER: MYSQL_USER
+            MYSQL_PASSWORD: MYSQL_PASSWORD
+        volumes:
+            - mysql_data:/var/lib/mysql
+        restart: always
+    php:
+        build: ./docker/php-fpm
+        volumes:
+            - ./:/var/www/app:cached
+            - ./shared/logs/app:/var/www/app/var/log:cached
+        links:
+            - db
+        extra_hosts:
+            - "docker-host.localhost:127.0.0.1"
+        restart: always
+    node:
+        image: node:10-alpine
+        volumes:
+            - ./:/var/www/app:cached
+        working_dir: /var/www/app
+    nginx:
+        build: ./docker/nginx
+        links:
+            - php
+        volumes:
+            - ./shared/logs/nginx:/var/log/nginx:cached
+            - ./:/var/www/app:cached
+        environment:
+            - VIRTUAL_HOST=website.com
+            - LETSENCRYPT_HOST=website.com
+            - LETSENCRYPT_EMAIL=letsencrypt@email.com
+        restart: always
+
+networks:
+    default:
+        external:
+            name: nginx-proxy
+
+volumes:
+    mysql_data:
