@@ -1,0 +1,8 @@
+parameters:
+    git_hook_variables:
+        EXEC_GRUMPHP_COMMAND: 'docker-compose run php'
+    tasks:
+        phpcsfixer2:
+            config: .php_cs
+            using_cache: ~
+            verbose: true

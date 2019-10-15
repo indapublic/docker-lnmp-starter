@@ -31,7 +31,8 @@ RUN apk add --update --no-cache \
 	php7-xdebug \
 	php7-zip \
 	make \
-	curl
+	curl \
+	git
 
 RUN echo "$(curl -sS https://composer.github.io/installer.sig) -" > composer-setup.php.sig \
 	&& curl -sS https://getcomposer.org/installer | tee composer-setup.php | sha384sum -c composer-setup.php.sig \

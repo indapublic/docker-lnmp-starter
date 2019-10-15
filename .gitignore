@@ -1,3 +1,5 @@
+.idea
+
 docker/nginx/app.conf
 docker-compose.yml
 
