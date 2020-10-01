@@ -1,38 +1,52 @@
-FROM alpine:3.8
+FROM alpine:3.11
 
 LABEL maintainer="Vasilii Zolotukhin <vasilii.zolotukhin@gmail.com>"
 
+ADD https://dl.bintray.com/php-alpine/key/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
+
+RUN apk --update add ca-certificates && \
+    echo "https://dl-cdn.alpinelinux.org/alpine/v3.7/community" >> /etc/apk/repositories && \
+    echo "https://dl.bintray.com/php-alpine/v3.11/php-7.4" >> /etc/apk/repositories
+
 RUN apk add --update --no-cache \
 	coreutils \
-	php7-fpm \
-	php7-apcu \
-	php7-ctype \
-	php7-curl \
-	php7-dom \
-	php7-gd \
-	php7-iconv \
-	php7-imagick \
-	php7-json \
-	php7-intl \
-	php7-mcrypt \
-	php7-fileinfo\
-	php7-mbstring \
-	php7-opcache \
-	php7-openssl \
-	php7-pdo \
-	php7-pdo_mysql \
-	php7-mysqli \
-	php7-xml \
-	php7-zlib \
-	php7-phar \
-	php7-tokenizer \
-	php7-session \
-	php7-simplexml \
-	php7-xdebug \
-	php7-zip \
+	php-fpm \
+	php-apcu \
+	php-ctype \
+	php-curl \
+	php-dom \
+	php-gd \
+	php-iconv \
+	php-imagick \
+	php-json \
+	php-intl \
+#	php-fileinfo\
+	php-mbstring \
+	php-opcache \
+	php-openssl \
+	php-pdo \
+	php-pdo_mysql \
+	php-mysqli \
+	php-xml \
+	php-zlib \
+	php-phar \
+#	php-tokenizer \
+    php-redis \
+	php-session \
+#	php-simplexml \
+	php-xdebug \
+#	php-zip \
 	make \
 	curl \
 	git
+
+RUN ln -sf /usr/bin/php7 /usr/bin/php
+
+#RUN apk add --update --no-cache \
+#	php-fileinfo\
+#	php-tokenizer \
+#	php-simplexml \
+#	php-zip
 
 RUN echo "$(curl -sS https://composer.github.io/installer.sig) -" > composer-setup.php.sig \
 	&& curl -sS https://getcomposer.org/installer | tee composer-setup.php | sha384sum -c composer-setup.php.sig \
@@ -41,11 +55,11 @@ RUN echo "$(curl -sS https://composer.github.io/installer.sig) -" > composer-set
 
 COPY app.ini /etc/php7/conf.d/
 COPY app.ini /etc/php7/cli/conf.d/
-COPY xdebug.ini  /etc/php7/conf.d/
+COPY xdebug.ini /etc/php7/conf.d/
 
 COPY app.pool.conf /etc/php7/php-fpm.d/
 
-CMD ["php-fpm7", "-F"]
+CMD ["/usr/sbin/php-fpm7", "-F"]
 
 WORKDIR /var/www/app
 EXPOSE 9001
