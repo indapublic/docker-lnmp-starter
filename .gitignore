@@ -1,6 +1,8 @@
-.idea
-
 docker/nginx/app.conf
 docker-compose.yml
 
-shared/logs
+data/*
+!data/.gitkeep
+
+logs/*
+!logs/.gitkeep

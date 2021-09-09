@@ -34,5 +34,5 @@ services:
         links:
             - php
         volumes:
-            - ./logs/nginx:/var/log/nginx:cached
             - ./app:/var/www/app:cached
+            - ./logs/nginx:/var/log/nginx:cached

@@ -32,8 +32,8 @@ services:
         links:
             - php
         volumes:
-            - ./logs/nginx:/var/log/nginx:cached
             - ./app:/var/www/app:cached
+            - ./logs/nginx:/var/log/nginx:cached
         environment:
             - VIRTUAL_HOST=website.com
             - LETSENCRYPT_HOST=website.com
