@@ -37,7 +37,7 @@ nginx-cli:
 	docker-compose exec nginx sh
 
 node-cli:
-	docker-compose exec node sh
+	docker-compose run --rm --no-deps node sh
 
 npm-update:
 	docker-compose run --rm --no-deps node npm update
