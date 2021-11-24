@@ -4,10 +4,10 @@ create-network:
 	docker network create nginx-proxy
 
 prepare-dev:
-	cp docker/nginx/app.conf.dev docker/nginx/app.conf && cp docker-compose.yml.dev docker-compose.yml
+	cp docker/nginx/app.conf.dev docker/nginx/app.conf && cp docker/php-fpm/app.ini.dev docker/php-fpm/app.ini && cp docker-compose.yml.dev docker-compose.yml
 
 prepare-prod:
-	cp docker/nginx/app.conf.prod docker/nginx/app.conf && cp docker-compose.yml.prod docker-compose.yml
+	cp docker/nginx/app.conf.prod docker/nginx/app.conf && cp docker/php-fpm/app.ini.prod docker/php-fpm/app.ini && cp docker-compose.yml.prod docker-compose.yml
 
 up:
 	docker-compose up -d --build --remove-orphans
