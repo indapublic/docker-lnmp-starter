@@ -31,6 +31,8 @@ RUN ln -sf /usr/bin/php8 /usr/bin/php
 COPY app.ini /etc/php8/conf.d/
 COPY app.ini /etc/php8/cli/conf.d/
 COPY app.pool.conf /etc/php8/php-fpm.d/
+COPY xdebug.ini /etc/php8/conf.d/
+COPY xdebug.ini /etc/php8/cli/conf.d/
 
 RUN echo "$(curl -sS https://composer.github.io/installer.sig) -" > composer-setup.php.sig \
 	&& curl -sS https://getcomposer.org/installer | tee composer-setup.php | sha384sum -c composer-setup.php.sig \
