@@ -24,6 +24,9 @@ server {
 		application/rss+xml
 		image/svg+xml;
 
+	location = /favicon.ico { access_log off; log_not_found off; }
+	location = /robots.txt  { access_log off; log_not_found off; }
+
 	location / {
 		try_files $uri @rewriteapp;
 	}

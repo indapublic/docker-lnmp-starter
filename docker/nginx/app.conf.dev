@@ -1,4 +1,6 @@
 server {
+	# For xdebug purposes we will answer on every server name here.
+	# server_name ~. "";
 	server_name website.localhost;
 	root /var/www/app/public;
 
@@ -24,6 +26,9 @@ server {
 		application/rss+xml
 		image/svg+xml;
 
+	location = /favicon.ico { access_log off; log_not_found off; }
+	location = /robots.txt  { access_log off; log_not_found off; }
+
 	location / {
 		try_files $uri @rewriteapp;
 	}
@@ -32,7 +37,9 @@ server {
 		rewrite ^(.*)$ /index.php/$1 last;
 	}
 
-	location ~ ^/index\.php(/|$) {
+	#	For xdebug validation all php files should be processed.
+	#	For production only index.php should be here.
+	location ~ \.php$ {
 		fastcgi_pass php-upstream;
 		fastcgi_split_path_info ^(.+\.php)(/.*)$;
 		include fastcgi_params;
