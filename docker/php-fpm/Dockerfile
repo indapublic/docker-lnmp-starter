@@ -33,6 +33,7 @@ RUN apk add --update --no-cache \
     php8-pdo \
     php8-pdo_mysql \
     php8-phar \
+    # php8-posix \
     # php8-redis \
     # php8-session \
     # php8-simplexml \
