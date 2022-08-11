@@ -1,11 +1,14 @@
-FROM alpine:3.12
+ARG ALPINE_VERSION
+FROM alpine:$ALPINE_VERSION
 
-MAINTAINER Vasilii Zolotukhin <vasilii.zolotukhin@gmail.com>
+ARG ENVIRONMENT
+
+LABEL maintainer="Vasilii Zolotukhin <vasilii.zolotukhin@gmail.com>"
 
 RUN apk add --update --no-cache nginx
 
 COPY nginx.conf /etc/nginx/
-COPY app.conf /etc/nginx/conf.d/
+COPY app.conf.$ENVIRONMENT /etc/nginx/conf.d/app.conf
 
 RUN echo "upstream php-upstream { server php:9001; }" > /etc/nginx/conf.d/upstream.conf
 
