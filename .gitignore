@@ -1,7 +1,4 @@
-docker/nginx/app.conf
-docker/php-fpm/app.ini
-
-docker-compose.yml
+.env
 
 data/*
 !data/.gitkeep

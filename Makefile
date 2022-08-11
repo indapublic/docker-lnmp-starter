@@ -1,87 +1,91 @@
+include .env
+
+# up:
+# ifeq ($(ENVIRONMENT), development)
+# endif
+# ifeq ($(ENVIRONMENT), production)
+# endif
+
+DOCKERFILE := docker-compose.yml.$(ENVIRONMENT)
+
 # Docker commands
 
 create-network:
 	docker network create nginx-proxy
 
-prepare-dev:
-	cp docker/nginx/app.conf.dev docker/nginx/app.conf && cp docker/php-fpm/app.ini.dev docker/php-fpm/app.ini && cp docker-compose.yml.dev docker-compose.yml
-
-prepare-prod:
-	cp docker/nginx/app.conf.prod docker/nginx/app.conf && cp docker/php-fpm/app.ini.prod docker/php-fpm/app.ini && cp docker-compose.yml.prod docker-compose.yml
-
 up:
-	docker-compose up -d --build --remove-orphans
+	docker-compose -f ${DOCKERFILE} up -d --build --remove-orphans
 
 stop:
-	docker-compose stop
+	docker-compose -f ${DOCKERFILE} stop
 
 down:
-	docker-compose down
+	docker-compose -f ${DOCKERFILE} down
 
 ps:
-	docker-compose ps
+	docker-compose -f ${DOCKERFILE} ps
 
 logs:
-	docker-compose logs
+	docker-compose -f ${DOCKERFILE} logs
 
 restart:
-	docker-compose restart
+	docker-compose -f ${DOCKERFILE} restart
 
 php-cli:
-	docker-compose exec php sh
+	docker-compose -f ${DOCKERFILE} exec php sh
 
 db-cli:
-	docker-compose exec db sh
+	docker-compose -f ${DOCKERFILE} exec db sh
 
 nginx-cli:
-	docker-compose exec nginx sh
+	docker-compose -f ${DOCKERFILE} exec nginx sh
 
 node-cli:
-	docker-compose run --rm --no-deps node sh
+	docker-compose -f ${DOCKERFILE} run --rm --no-deps node sh
 
 npm-update:
-	docker-compose run --rm --no-deps node npm update
+	docker-compose -f ${DOCKERFILE} run --rm --no-deps node npm update
 
 npm-install:
-	docker-compose run --rm --no-deps node npm install
+	docker-compose -f ${DOCKERFILE} run --rm --no-deps node npm install
 
 npm-ci:
-	docker-compose run --rm --no-deps node npm ci
+	docker-compose -f ${DOCKERFILE} run --rm --no-deps node npm ci
 
 npm-watch:
-	docker-compose run --rm --no-deps node npm run watch
+	docker-compose -f ${DOCKERFILE} run --rm --no-deps node npm run watch
 
 npm-build:
-	docker-compose run --rm --no-deps node npm run build
+	docker-compose -f ${DOCKERFILE} run --rm --no-deps node npm run build
 
 npm-audit:
-	docker-compose run --rm --no-deps node npm audit
+	docker-compose -f ${DOCKERFILE} run --rm --no-deps node npm audit
 
 npm-audit-fix:
-	docker-compose run --rm --no-deps node npm audit fix
+	docker-compose -f ${DOCKERFILE} run --rm --no-deps node npm audit fix
 
 # Devops commands
 
 dump-env-prod:
-	docker-compose exec composer dump-env prod
+	docker-compose -f ${DOCKERFILE} exec composer dump-env prod
 
 cache-clear:
-	docker-compose exec php bin/console cache:clear
+	docker-compose -f ${DOCKERFILE} exec php bin/console cache:clear
 
 cache-warm:
-	docker-compose exec php bin/console cache:warm
+	docker-compose -f ${DOCKERFILE} exec php bin/console cache:warm
 
 permissions-fix:
-	docker-compose exec php chmod -R 0777 var/cache && docker-compose exec php chmod -R 0777 var/log
+	docker-compose -f ${DOCKERFILE} exec php chmod -R 0777 var/cache && docker-compose exec php chmod -R 0777 var/log
 
 after-deploy: cache-clear cache-warm permissions-fix
 
 # Swagger commands
 
 validate-swagger:
-	docker-compose run --rm --no-deps node swagger-cli validate swagger/v1.0/swagger.yaml
+	docker-compose -f ${DOCKERFILE} run --rm --no-deps node swagger-cli validate swagger/v1.0/swagger.yaml
 
 build-swagger:
-	docker-compose run --rm --no-deps node swagger-cli bundle swagger/v1.0/swagger.yaml > public/swagger/v1.0.yaml
+	docker-compose -f ${DOCKERFILE} run --rm --no-deps node swagger-cli bundle swagger/v1.0/swagger.yaml > public/swagger/v1.0.yaml
 
 # App commands
